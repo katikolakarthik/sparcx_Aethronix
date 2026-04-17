@@ -1,103 +1,105 @@
-<div align="center">
+<p align="center">
+  <img src="screenshots/image1.png" alt="Smart Farm Simulator — app preview" width="92%" style="max-width: 920px; border-radius: 14px;" />
+</p>
 
-# Smart Farm Simulator
+<h1 align="center">Smart Farm Simulator</h1>
 
-**AI-powered farming simulation + crop disease intelligence — test strategies, predict economics, and triage field issues before you cultivate.**
+<p align="center"><strong>Full-stack agritech demo</strong> — simulate crops before you sow, export PDFs, and run an AI-style disease workflow with maps & mock store routing.</p>
 
-[![Node.js](https://img.shields.io/badge/Node-%3E%3D18-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
-[![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=black)](https://react.dev/)
-[![Vite](https://img.shields.io/badge/Vite-5-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
-[![Express](https://img.shields.io/badge/Express-4-000000?logo=express&logoColor=white)](https://expressjs.com/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-8-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+<p align="center">
+  <a href="https://nodejs.org/"><img alt="Node 18+" src="https://img.shields.io/badge/node-%3E%3D18-339933?style=for-the-badge&logo=node.js&logoColor=white" /></a>
+  <a href="https://react.dev/"><img alt="React 18" src="https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black" /></a>
+  <a href="https://vitejs.dev/"><img alt="Vite" src="https://img.shields.io/badge/Vite-5-646CFF?style=for-the-badge&logo=vite&logoColor=white" /></a>
+</p>
 
-[Features](#-features) · [Screenshots](#-screenshots) · [Architecture](#-architecture) · [API](#-rest-api) · [Quick start](#-quick-start) · [Project structure](#-project-structure)
+<p align="center">
+  <a href="https://expressjs.com/"><img alt="Express" src="https://img.shields.io/badge/Express-4-000000?style=for-the-badge&logo=express&logoColor=white" /></a>
+  <a href="https://www.mongodb.com/"><img alt="MongoDB" src="https://img.shields.io/badge/MongoDB-8-47A248?style=for-the-badge&logo=mongodb&logoColor=white" /></a>
+  <a href="https://tailwindcss.com/"><img alt="Tailwind" src="https://img.shields.io/badge/Tailwind-3-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" /></a>
+</p>
 
-</div>
-
----
-
-## Why this project
-
-Smart Farm Simulator is a **full-stack** web application for farmers and agritech demos. It combines:
-
-1. **Yield & economics simulation** — rule-based “AI” predicts crop, yield, cost, revenue, profit, and risk from soil, water, climate, and budget inputs (designed to be swapped for real ML later).
-2. **AI Crop Disease Detection** — upload leaf/crop photos, get mock vision-based disease labels, treatment plans, **PDF reports**, and **nearby agri-store** suggestions with an **interactive Leaflet map** (light tiles in all themes).
-
-The UI is **premium**: green agronomy palette, glass-style cards, **Framer Motion** transitions, **Recharts** dashboards, **dark mode**, **multi-language** (EN / ES / HI / TE), toasts, and responsive **sidebar + navbar** layout.
-
----
-
-## Features
-
-### Core simulator
-
-| Area | Details |
-|------|--------|
-| **Landing** | Hero, CTAs, feature cards, testimonials, footer |
-| **Auth** | Register / login with JWT, bcrypt-hashed passwords |
-| **Dashboard** | Summary cards, profit/yield/climate charts from MongoDB history |
-| **New simulation** | Full form + overlay loader + persistence |
-| **Results** | Rich cards, alternatives, fertilizers, pest alerts, **export simulation PDF** |
-| **Compare crops** | Rice, cotton, maize — tables + charts |
-| **History** | All simulations for the logged-in user |
-| **Settings** | Language, theme, profile (PATCH name) |
-
-### Disease detection module
-
-| Area | Details |
-|------|--------|
-| **Upload** | Drag & drop, camera (`capture`), image preview |
-| **Analysis** | Client-side image features + server mock classifier → disease, confidence, severity, cause, prevention |
-| **Treatment** | Medicine cards with usage, spray method, duration, safety, price; **“How to apply”** modal |
-| **Stores** | Mock stores with distance, hours hint, phone, **Navigate** (Google Maps) |
-| **Map** | **react-leaflet** + OSM tiles — always **light** map for readability; fit bounds to pins |
-| **Extras** | Voice summary (`speechSynthesis`), save/history tab, disease **PDF**, GPS for distances |
+<p align="center">
+  <a href="#demo-gallery">Gallery</a>
+  &nbsp;·&nbsp;
+  <a href="#highlights">Highlights</a>
+  &nbsp;·&nbsp;
+  <a href="#tech-stack">Stack</a>
+  &nbsp;·&nbsp;
+  <a href="#getting-started">Run locally</a>
+  &nbsp;·&nbsp;
+  <a href="#api-reference">API</a>
+</p>
 
 ---
 
-## Screenshots
+## Demo gallery
 
-> Add or replace images in `screenshots/` — these paths work on GitHub when files are committed.
+<p align="center">
+  <sub>Commit all files under <code>screenshots/</code> so images load on GitHub.</sub>
+</p>
 
 <table>
   <tr>
-    <td width="50%">
-      <img src="screenshots/image1.png" alt="Smart Farm Simulator screenshot 1" width="100%" />
-      <p align="center"><sub><b>1</b> — Landing / hero / first impression</sub></p>
+    <td width="50%" valign="top">
+      <img src="screenshots/image2.png" width="100%" alt="Screenshot 2" />
+      <p align="center"><sub><b>2</b></sub></p>
     </td>
-    <td width="50%">
-      <img src="screenshots/image2.png" alt="Smart Farm Simulator screenshot 2" width="100%" />
-      <p align="center"><sub><b>2</b> — Auth or dashboard overview</sub></p>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <img src="screenshots/image3.png" alt="Smart Farm Simulator screenshot 3" width="100%" />
-      <p align="center"><sub><b>3</b> — Simulation or analytics view</sub></p>
-    </td>
-    <td>
-      <img src="screenshots/image4.png" alt="Smart Farm Simulator screenshot 4" width="100%" />
-      <p align="center"><sub><b>4</b> — Results / charts / cards</sub></p>
+    <td width="50%" valign="top">
+      <img src="screenshots/image3.png" width="100%" alt="Screenshot 3" />
+      <p align="center"><sub><b>3</b></sub></p>
     </td>
   </tr>
   <tr>
-    <td>
-      <img src="screenshots/image5.png" alt="Smart Farm Simulator screenshot 5" width="100%" />
-      <p align="center"><sub><b>5</b> — Disease detection workflow</sub></p>
+    <td valign="top">
+      <img src="screenshots/image4.png" width="100%" alt="Screenshot 4" />
+      <p align="center"><sub><b>4</b></sub></p>
     </td>
-    <td>
-      <img src="screenshots/image6.png" alt="Smart Farm Simulator screenshot 6" width="100%" />
-      <p align="center"><sub><b>6</b> — Map & nearby stores</sub></p>
+    <td valign="top">
+      <img src="screenshots/image5.png" width="100%" alt="Screenshot 5" />
+      <p align="center"><sub><b>5</b></sub></p>
     </td>
   </tr>
   <tr>
-    <td colspan="2">
-      <img src="screenshots/image7.png" alt="Smart Farm Simulator screenshot 7" width="100%" />
-      <p align="center"><sub><b>7</b> — History, settings, or mobile layout</sub></p>
+    <td valign="top">
+      <img src="screenshots/image6.png" width="100%" alt="Screenshot 6" />
+      <p align="center"><sub><b>6</b></sub></p>
+    </td>
+    <td valign="top">
+      <img src="screenshots/image7.png" width="100%" alt="Screenshot 7" />
+      <p align="center"><sub><b>7</b></sub></p>
     </td>
   </tr>
 </table>
+
+---
+
+## Highlights
+
+| Module | What it does |
+|--------|----------------|
+| **Farm simulator** | JWT auth, Mongo-backed simulations, dashboard charts (Recharts), compare crops, history, PDF export for runs |
+| **Disease intelligence** | Image upload (multer), mock CV features + server rules, treatments, **Leaflet** map (always light tiles), mock nearby stores, disease PDF |
+| **Product UI** | Tailwind + agronomy greens, glass cards, Framer Motion, dark mode, i18n (EN · ES · HI · TE), toasts, responsive sidebar |
+
+<details>
+<summary><strong>Expand: feature checklist</strong></summary>
+
+**Simulator:** landing · register/login · dashboard stat cards · profit / yield / climate charts · simulation form with loader · result cards + alternatives + fertilizers + pest warnings · crop compare (rice / cotton / maize) · simulation history · settings (language, theme, profile).
+
+**Disease:** drag-drop & camera · detect + reset · severity badge · medicine cards + “how to apply” modal · store cards + navigate · voice summary (Web Speech) · scan history tab · GPS for distances.
+
+</details>
+
+---
+
+## Tech stack
+
+| | |
+|--|--|
+| **Client** | React 18 · Vite 5 · Tailwind · Framer Motion · Recharts · react-leaflet · Leaflet · Lucide · axios · react-hot-toast · jsPDF |
+| **Server** | Express 4 · Mongoose · Multer 2 · bcryptjs · JWT · CORS · dotenv |
+| **Data** | MongoDB collections: `User`, `Simulation`, `DiseaseScan` |
+| **“AI”** | Replaceable heuristics in `server/utils/predict.js` & `diseasePredict.js` |
 
 ---
 
@@ -105,109 +107,47 @@ The UI is **premium**: green agronomy palette, glass-style cards, **Framer Motio
 
 ```mermaid
 flowchart LR
-  subgraph client [Client — Vite + React]
-    UI[Pages & components]
-    APIc[Axios /api + /uploads proxy]
+  subgraph Client
+    A[React SPA]
   end
-  subgraph server [Server — Express]
-    Auth[JWT auth]
-    Sim[Simulations CRUD]
-    Dis[Disease upload + detect]
-    St[Stores nearby]
-    Up[Static /uploads]
+  subgraph API[Express API]
+    B[Auth]
+    C[Simulations]
+    D[Disease + uploads]
+    E[Stores nearby]
   end
-  DB[(MongoDB)]
-  UI --> APIc
-  APIc --> Auth
-  APIc --> Sim
-  APIc --> Dis
-  APIc --> St
-  APIc --> Up
-  Auth --> DB
-  Sim --> DB
-  Dis --> DB
+  F[(MongoDB)]
+  A --> B
+  A --> C
+  A --> D
+  A --> E
+  B --> F
+  C --> F
+  D --> F
 ```
 
 ---
 
-## Tech stack
+## Getting started
 
-| Layer | Technologies |
-|--------|----------------|
-| **Frontend** | React 18, Vite 5, Tailwind CSS, Framer Motion, Recharts, react-leaflet, Leaflet, Lucide icons, react-hot-toast, jsPDF |
-| **Backend** | Node.js 18+, Express 4, Mongoose 8, Multer 2, bcryptjs, jsonwebtoken, cors, dotenv |
-| **Database** | MongoDB (users, simulations, disease scans) |
-| **AI (mock)** | Rule-based prediction in `server/utils/predict.js` + `diseasePredict.js` — replace with real models / APIs when ready |
-
----
-
-## REST API
-
-### Auth (`/api/auth`)
-
-| Method | Path | Description |
-|--------|------|-------------|
-| `POST` | `/register` | Body: `name`, `email`, `password` → JWT + user |
-| `POST` | `/login` | Body: `email`, `password` → JWT + user |
-| `PATCH` | `/profile` | Bearer JWT — update `name` |
-
-### Simulations (`/api/simulations`) — Bearer JWT
-
-| Method | Path | Description |
-|--------|------|-------------|
-| `POST` | `/create` | Create simulation from form payload |
-| `GET` | `/all` | List user’s simulations |
-| `GET` | `/:id` | Get one simulation |
-
-### Disease (`/api/disease`) — Bearer JWT
-
-| Method | Path | Description |
-|--------|------|-------------|
-| `POST` | `/upload` | `multipart/form-data`, field **`image`** (JPEG/PNG/WebP) |
-| `POST` | `/detect` | JSON: `imageUrl`, `features`, optional `cropType`, `latitude`, `longitude`, `city` |
-| `GET` | `/history` | List disease scans |
-| `GET` | `/:id` | Get one scan |
-
-### Stores (`/api/stores`) — Bearer JWT
-
-| Method | Path | Description |
-|--------|------|-------------|
-| `GET` | `/nearby` | Query: `lat`, `lng`, `city`, `medicine` (comma-separated) |
-
-### Other
-
-| Method | Path | Description |
-|--------|------|-------------|
-| `GET` | `/api/health` | API heartbeat |
-| `GET` | `/uploads/...` | Served static files for uploaded disease images |
-
----
-
-## Quick start
-
-### Prerequisites
-
-- **Node.js** ≥ 18  
-- **MongoDB** running locally or a connection string (Atlas, etc.)
-
-### 1. Clone & install
+**Requirements:** Node.js **≥ 18** · **MongoDB** (local or Atlas)
 
 ```bash
-git clone https://github.com/<YOUR_USERNAME>/aethronix.git
-cd aethronix
+git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
+cd YOUR_REPO
 ```
 
-**Server**
+**Terminal 1 — API**
 
 ```bash
 cd server
 cp .env.example .env
-# Edit .env — set MONGODB_URI and JWT_SECRET (and optional CLIENT_ORIGIN)
+# Set MONGODB_URI, JWT_SECRET (and CLIENT_ORIGIN if needed)
 npm install
 npm run dev
 ```
 
-**Client** (second terminal)
+**Terminal 2 — UI**
 
 ```bash
 cd client
@@ -215,93 +155,111 @@ npm install
 npm run dev
 ```
 
-Open **http://localhost:5173** — Vite proxies `/api` and `/uploads` to the API (default `http://localhost:5000`).
+Open **http://localhost:5173** (Vite proxies `/api` and `/uploads` to port **5000** by default).
 
-### 2. Environment variables (`server/.env`)
-
-| Variable | Example | Purpose |
-|----------|---------|---------|
-| `PORT` | `5000` | API port |
-| `MONGODB_URI` | `mongodb://127.0.0.1:27017/smart_farm_simulator` | Database |
-| `JWT_SECRET` | long random string | Sign JWTs |
-| `CLIENT_ORIGIN` | `http://localhost:5173` | CORS |
-
-### 3. Production build (client)
+**Production UI**
 
 ```bash
-cd client
-npm run build
-npm run preview   # optional local preview of dist/
-```
-
-Serve `client/dist` with any static host and point API `CLIENT_ORIGIN` to your frontend URL.
-
----
-
-## Project structure
-
-```
-aethronix/
-├── client/                 # React + Vite SPA
-│   ├── public/
-│   ├── src/
-│   │   ├── api/            # Axios instance
-│   │   ├── components/     # Layout, disease/*, charts, forms…
-│   │   ├── context/        # Auth, theme, language
-│   │   ├── i18n/
-│   │   ├── pages/
-│   │   └── utils/          # imageFeatures, PDF exports
-│   ├── index.html
-│   ├── package.json
-│   ├── tailwind.config.js
-│   └── vite.config.js
-├── server/                 # Express API
-│   ├── models/             # User, Simulation, DiseaseScan
-│   ├── routes/             # auth, simulations, disease, stores
-│   ├── middleware/
-│   ├── utils/              # predict.js, diseasePredict.js, mockStores.js
-│   ├── index.js
-│   ├── package.json
-│   └── .env.example
-├── screenshots/            # README gallery (commit PNGs here)
-└── README.md
+cd client && npm run build && npm run preview
 ```
 
 ---
 
-## Notes for evaluators
+## Environment (`server/.env`)
 
-- **Authentication**: JWT in `localStorage`; protected routes on the client; `requireAuth` on protected API routes.
-- **File uploads**: Disease images land under `server/uploads/disease/` (add `uploads/` to `.gitignore`; not committed by default).
-- **“AI”**: Heuristic / rule-based logic only — suitable for demos and UI/UX evaluation; clearly separated in `server/utils/` for future ML integration.
-- **Axios**: Do not set a global `Content-Type: application/json` header so `FormData` uploads work for disease images.
-
----
-
-## Scripts reference
-
-| Location | Command | Purpose |
-|----------|---------|---------|
-| `server/` | `npm run dev` | API with `--watch` |
-| `server/` | `npm start` | API production mode |
-| `client/` | `npm run dev` | Vite dev server |
-| `client/` | `npm run build` | Production bundle |
-| `client/` | `npm run preview` | Preview `dist/` |
+| Key | Purpose |
+|-----|---------|
+| `PORT` | API port (default `5000`) |
+| `MONGODB_URI` | Mongo connection string |
+| `JWT_SECRET` | Secret for signing tokens |
+| `CLIENT_ORIGIN` | Frontend URL for CORS (e.g. `http://localhost:5173`) |
 
 ---
 
-## License
+## API reference
 
-This repository is intended for **portfolio / coursework / evaluation**. Add a `LICENSE` file if you want explicit terms (e.g. MIT).
+<details>
+<summary><strong>Auth —</strong> <code>/api/auth</code></summary>
+
+| Method | Path | Body / notes |
+|--------|------|----------------|
+| POST | `/register` | `name`, `email`, `password` |
+| POST | `/login` | `email`, `password` |
+| PATCH | `/profile` | Bearer JWT · `name` |
+
+</details>
+
+<details>
+<summary><strong>Simulations —</strong> <code>/api/simulations</code> (JWT)</summary>
+
+| Method | Path | Notes |
+|--------|------|--------|
+| POST | `/create` | Full simulation payload |
+| GET | `/all` | User’s runs |
+| GET | `/:id` | One document |
+
+</details>
+
+<details>
+<summary><strong>Disease —</strong> <code>/api/disease</code> (JWT)</summary>
+
+| Method | Path | Notes |
+|--------|------|--------|
+| POST | `/upload` | `multipart/form-data`, field name **`image`** |
+| POST | `/detect` | JSON: `imageUrl`, `features`, optional geo + `cropType` |
+| GET | `/history` | All scans |
+| GET | `/:id` | One scan |
+
+</details>
+
+<details>
+<summary><strong>Stores —</strong> <code>/api/stores</code> (JWT)</summary>
+
+| Method | Path | Query |
+|--------|------|--------|
+| GET | `/nearby` | `lat`, `lng`, `city`, `medicine` (comma-separated) |
+
+</details>
+
+**Health:** `GET /api/health` · **Static uploads:** `GET /uploads/...`
 
 ---
 
-<div align="center">
+## Repository layout
 
-**Built with discipline — mock intelligence today, real models tomorrow.**
+```
+├── client/          # Vite + React (src/pages, components, contexts, i18n)
+├── server/          # Express (models, routes, middleware, utils)
+├── screenshots/     # README images (keep in git for GitHub preview)
+├── README.md
+└── .gitignore
+```
 
-⭐ If this README helped your review, a star on the repo is appreciated.
+---
 
-</div>
-#   s p a r c x _ A e t h r o n i x  
- 
+## Notes for reviewers
+
+- **JWT** stored client-side; API routes use `Authorization: Bearer <token>`.
+- **Disease uploads** write to `server/uploads/disease/` (ignored by git — create folder on deploy).
+- **Axios:** no global `Content-Type: application/json` so **FormData** uploads work.
+- **Map:** OSM raster tiles; light style even when the app theme is dark.
+
+---
+
+## Scripts
+
+| Folder | Command | Use |
+|--------|---------|-----|
+| `server/` | `npm run dev` | Dev API (`node --watch`) |
+| `server/` | `npm start` | Prod API |
+| `client/` | `npm run dev` | Vite dev |
+| `client/` | `npm run build` | Static build |
+| `client/` | `npm run preview` | Serve `dist/` locally |
+
+---
+
+<p align="center">
+  <sub>Evaluation / portfolio project — swap mock logic for real ML & maps APIs when you scale.</sub>
+  <br /><br />
+  <sub>If this README was useful, leaving a star helps others find the repo.</sub>
+</p>
