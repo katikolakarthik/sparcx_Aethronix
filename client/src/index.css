@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply scroll-smooth antialiased;
+  }
+  body {
+    @apply bg-farm-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 min-h-screen;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border border-white/40 dark:border-slate-700/60;
+  }
+}
+
+/* Leaflet: keep map under modals/nav; inherit font */
+.leaflet-container {
+  z-index: 0;
+  font-family: inherit;
+}
+.leaflet-control-attribution {
+  @apply text-[10px] leading-tight;
+}
+
+/* Keep disease map tiles light & true-colour even in app dark mode */
+.store-map-light.leaflet-container {
+  background: #f4f4f4;
+}
+.store-map-light .leaflet-tile-container img {
+  filter: none !important;
+}
