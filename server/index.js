@@ -17,9 +17,19 @@ import assistantRoutes from './routes/assistant.js';
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+function corsOriginOption() {
+  const raw = process.env.CLIENT_ORIGIN || 'http://localhost:5173';
+  const list = raw
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+  if (list.length === 0) return 'http://localhost:5173';
+  return list.length === 1 ? list[0] : list;
+}
+
 app.use(
   cors({
-    origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173',
+    origin: corsOriginOption(),
     credentials: true,
   }),
 );

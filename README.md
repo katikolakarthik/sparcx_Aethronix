@@ -27,6 +27,8 @@
   &nbsp;·&nbsp;
   <a href="#getting-started">Run locally</a>
   &nbsp;·&nbsp;
+  <a href="#production-deployment">Deploy</a>
+  &nbsp;·&nbsp;
   <a href="#api-reference">API</a>
 </p>
 
@@ -201,14 +203,55 @@ cd client && npm run build && npm run preview
 
 ---
 
+## Production deployment
+
+Live UI example: [sparcx-aethronix.vercel.app](https://sparcx-aethronix.vercel.app/). The static Vercel build does **not** include the Express server, so the browser must call your API on its own public URL.
+
+### 1. Backend (any Node host: Render, Railway, Fly.io, VPS, …)
+
+1. Create a **Web Service** (or equivalent) pointing at this repo with **root directory** `server` (or run commands from `server/`).
+2. **Install:** `npm install` · **Start:** `npm start` (uses `process.env.PORT` automatically on most hosts).
+3. Set environment variables on the host:
+
+| Variable | Example / notes |
+|----------|------------------|
+| `MONGODB_URI` | [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) connection string (`mongodb+srv://…`) |
+| `JWT_SECRET` | Long random string (same secret across deploys so existing tokens stay valid, or plan a logout) |
+| `CLIENT_ORIGIN` | `https://sparcx-aethronix.vercel.app` — CORS for your Vercel app. Comma-separated values are supported for preview URLs. |
+| `PORT` | Optional; many platforms inject this |
+
+4. In **Atlas → Network Access**, allow your host’s egress IPs or `0.0.0.0/0` for a demo (tighten for production).
+
+**Ephemeral disk:** disease images are stored under `uploads/` on the server filesystem. On typical PaaS free tiers the disk is wiped on redeploy or sleep; for durable images use object storage (S3, R2, etc.) and return full URLs from upload logic later.
+
+### 2. Frontend (Vercel)
+
+1. In the Vercel project → **Settings → Environment Variables**, add:
+
+| Name | Value |
+|------|--------|
+| `VITE_API_ORIGIN` | Your API base URL **without** a trailing slash, e.g. `https://smart-farm-api.onrender.com` |
+
+2. **Redeploy** the site so Vite bakes this value into the build (`import.meta.env.VITE_API_ORIGIN`).
+
+Locally, leave `VITE_API_ORIGIN` unset so `/api` and `/uploads` keep using the Vite dev proxy.
+
+---
+
 ## Environment (`server/.env`)
 
 | Key | Purpose |
 |-----|---------|
-| `PORT` | API port (default `5000`) |
+| `PORT` | API port (default `5000`; PaaS usually overrides) |
 | `MONGODB_URI` | Mongo connection string |
 | `JWT_SECRET` | Secret for signing tokens |
-| `CLIENT_ORIGIN` | Frontend URL for CORS (e.g. `http://localhost:5173`) |
+| `CLIENT_ORIGIN` | Frontend origin(s) for CORS (e.g. `http://localhost:5173` or `https://sparcx-aethronix.vercel.app`). Comma-separated for multiple origins. |
+
+### Frontend build (`client/.env` or Vercel env)
+
+| Key | Purpose |
+|-----|---------|
+| `VITE_API_ORIGIN` | Production API origin only (no `/api` suffix, no trailing slash). Copy from `client/.env.example`. |
 
 ---
 

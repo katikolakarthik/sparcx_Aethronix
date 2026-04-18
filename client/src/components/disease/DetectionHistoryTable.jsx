@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { publicAssetUrl } from '../../api/client.js';
 
 export default function DetectionHistoryTable({ rows, onRefresh }) {
   if (!rows?.length) {
@@ -47,7 +48,7 @@ export default function DetectionHistoryTable({ rows, onRefresh }) {
                 <td className="px-4 py-3">{r.severity}</td>
                 <td className="px-4 py-3">
                   <Link to={`/disease?scan=${r._id}`} className="inline-flex items-center gap-2">
-                    <img src={r.imageUrl} alt="" className="h-12 w-12 rounded-lg border border-slate-200 object-cover dark:border-slate-700" />
+                    <img src={publicAssetUrl(r.imageUrl)} alt="" className="h-12 w-12 rounded-lg border border-slate-200 object-cover dark:border-slate-700" />
                   </Link>
                 </td>
               </tr>
