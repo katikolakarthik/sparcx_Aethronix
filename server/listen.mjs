@@ -1,6 +1,6 @@
 /**
- * Local / VPS / Render / Railway entry only.
- * Vercel runs `api/index.js` + rewrites in `vercel.json` (do not rely on root `export default` there).
+ * Local / VPS / Render / Railway only — `npm start` / `npm run dev`.
+ * Vercel uses `api/main.js` + `vercel.json` rewrites (never name this file `index.js`).
  */
 import 'dotenv/config';
 import { connectDb } from './db.js';

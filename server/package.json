@@ -2,11 +2,11 @@
   "name": "smart-farm-simulator-server",
   "version": "1.0.0",
   "description": "Express API for Smart Farm Simulator",
-  "main": "index.js",
+  "main": "listen.mjs",
   "type": "module",
   "scripts": {
-    "start": "node index.js",
-    "dev": "node --watch index.js"
+    "start": "node listen.mjs",
+    "dev": "node --watch listen.mjs"
   },
   "engines": {
     "node": ">=18"

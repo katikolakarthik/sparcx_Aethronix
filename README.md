@@ -226,18 +226,18 @@ Live UI example: [sparcx-aethronix.vercel.app](https://sparcx-aethronix.vercel.a
 
 ### 1b. Backend on Vercel (`server/` + explicit function)
 
-If Vercel **serves `index.js` as plain text** or **`/api/health` is 404**, the project was treated like a **static file upload**, not a Node API. This repo fixes that with:
+If Vercel **serves source as plain text** or **`/api/health` is wrong**, the deploy was treated like a **static upload** (often because a root **`index.js`** is published as a static asset, or rewrites never hit a function). This repo uses:
 
-- **`server/vercel.json`** — `"framework": null` (Other) and a **rewrite** of every path to **`/api`**
-- **`server/api/index.js`** — one serverless function wrapping the same Express app via **`serverless-http`**
-- **`server/index.js`** — **no** `export default` (local `npm start` / Render only)
+- **`server/vercel.json`** — rewrite **every path** → **`/api/main`**
+- **`server/api/main.js`** — one serverless function + **`serverless-http`** around the same Express app
+- **`server/listen.mjs`** — **only** for `npm start` / local / Render (no root `index.js` on purpose)
 
 **Vercel project settings**
 
-1. **Root Directory** → **`server`**
-2. **Framework Preset** → **Other** (matches `vercel.json` `framework: null`; avoids wrong auto-build)
-3. **Build Command** → leave **empty** (unless you add a real build later)
-4. **Output Directory** → **empty / default** — do **not** set this to `.` or `server`; that publishes source as static files and breaks routing
+1. **Root Directory** → **`server`** (must match the folder that contains `api/` and `vercel.json`)
+2. **Framework Preset** → **Other**
+3. **Build Command** → **empty**
+4. **Output Directory** → **empty** — never `.` or `server` (that ships `.js` sources as static files)
 5. Env: `MONGODB_URI`, `JWT_SECRET`, `CLIENT_ORIGIN` (frontend origin, no trailing slash)
 
 Then **Redeploy** and open `https://YOUR-API.vercel.app/api/health` — expect `{"ok":true,"service":"smart-farm-simulator-api"}`.
