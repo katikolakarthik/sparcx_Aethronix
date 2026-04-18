@@ -35,13 +35,13 @@
 ## Demo screen recording
 
 <p align="center" id="demo-screen-recording">
-  <a href="https://www.youtube.com/watch?v=REPLACE_WITH_YOUR_VIDEO_ID" title="Open demo walkthrough on YouTube">
-    <img src="screenshots/image1.png" alt="Click to watch the Smart Farm demo on YouTube" width="92%" style="max-width: 920px; border-radius: 14px;" />
+  <a href="https://drive.google.com/file/d/1wGPIp0EmrZYsB3ed4vJiNI8VlmByUCql/view?usp=sharing" target="_blank" rel="noopener noreferrer" title="Open screen recording on Google Drive">
+    <img src="screenshots/image1.png" alt="Click to open the Smart Farm screen recording (Google Drive)" width="92%" style="max-width: 920px; border-radius: 14px;" />
   </a>
 </p>
 
 <p align="center">
-  <sub><strong>Why not an MP4 in this repo?</strong> GitHub rejects any file <strong>&gt; 100 MB</strong>. Upload your recording to YouTube (unlisted is fine) and replace <code>REPLACE_WITH_YOUR_VIDEO_ID</code> in this README, <em>or</em> compress to &lt; 95 MB and remove <code>screenshots/*.mp4</code> from <code>.gitignore</code> before committing the small MP4.</sub>
+  <sub><strong>Screen recording:</strong> hosted on <a href="https://drive.google.com/file/d/1wGPIp0EmrZYsB3ed4vJiNI8VlmByUCql/view?usp=sharing" target="_blank" rel="noopener noreferrer">Google Drive</a> (file is &gt; 100 MB — GitHub cannot store it in git). Click the image above to watch.</sub>
 </p>
 
 <details>
@@ -54,10 +54,6 @@ ffmpeg -y -i "screenshots/demo-screen-recording.mp4" -vcodec libx264 -crf 30 -pr
 Then remove the <code>screenshots/*.mp4</code> line from <code>.gitignore</code>, commit only <code>demo-readme.mp4</code>, and switch the README block back to a <code>&lt;video src="screenshots/demo-readme.mp4"&gt;</code> embed if you prefer self‑hosting on GitHub.
 
 </details>
-
-<p align="center">
-  <img src="screenshots/image1.png" alt="Smart Farm Simulator — app preview" width="92%" style="max-width: 920px; border-radius: 14px;" />
-</p>
 
 ---
 
