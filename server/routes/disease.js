@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import fs from 'fs';
-import path from 'path';
 import multer from 'multer';
 import crypto from 'crypto';
 import { requireAuth } from '../middleware/auth.js';
 import { DiseaseScan } from '../models/DiseaseScan.js';
 import { predictDiseaseFromFeatures } from '../utils/diseasePredict.js';
 import { findNearbyStores, MOCK_STORES } from '../utils/mockStores.js';
+import { getDiseaseUploadDir } from '../paths.js';
 
 function enrichStores(stores = []) {
   return stores.map((s) => {
@@ -15,8 +15,7 @@ function enrichStores(stores = []) {
   });
 }
 
-const uploadRoot = path.join(process.cwd(), 'uploads', 'disease');
-
+const uploadRoot = getDiseaseUploadDir();
 fs.mkdirSync(uploadRoot, { recursive: true });
 
 const storage = multer.diskStorage({

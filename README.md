@@ -224,6 +224,17 @@ Live UI example: [sparcx-aethronix.vercel.app](https://sparcx-aethronix.vercel.a
 
 **Ephemeral disk:** disease images are stored under `uploads/` on the server filesystem. On typical PaaS free tiers the disk is wiped on redeploy or sleep; for durable images use object storage (S3, R2, etc.) and return full URLs from upload logic later.
 
+### 1b. Backend on Vercel (same stack as `sparcx-aethronix-m7ho.vercel.app`)
+
+A normal `node index.js` server does **not** run on Vercel; the repo now includes a **serverless** entry (`server/api/index.js` + `serverless-http`) and `server/vercel.json` rewrites so all paths hit that function.
+
+1. In the **API** Vercel project → **Settings → General → Root Directory**, set **`server`** (required so `api/` and `vercel.json` are recognized).
+2. **Environment variables** (Production): `MONGODB_URI`, `JWT_SECRET`, `CLIENT_ORIGIN` (your **frontend** URL, e.g. `https://sparcx-aethronix.vercel.app`).
+3. **Redeploy** after pushing the latest `server/` changes (`npm install` will pull `serverless-http`).
+4. Smoke test: open `https://YOUR-API.vercel.app/api/health` — expect `{"ok":true,...}`.
+
+On Vercel, disease uploads are written under **`/tmp`** only (per invocation); treat them as **short-lived**. Render/Railway are still easier for a classic Express process and local disk.
+
 ### 2. Frontend (Vercel)
 
 1. In the Vercel project → **Settings → Environment Variables**, add:
