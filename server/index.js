@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { connectDb } from './db.js';
-import { createApp } from './app.js';
+import { createApp } from './httpApp.js';
 
 const app = createApp();
 

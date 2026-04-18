@@ -226,7 +226,7 @@ Live UI example: [sparcx-aethronix.vercel.app](https://sparcx-aethronix.vercel.a
 
 ### 1b. Backend on Vercel (Express preset)
 
-Vercel’s **Express** integration looks for `server/index.js` and expects a **default export** of the Express `app` (see [Express on Vercel](https://vercel.com/docs/frameworks/backend/express)). This repo’s `index.js` does that when `VERCEL` is set, and uses `app.listen` only for local / non-Vercel runs. Do **not** add a competing `vercel.json` rewrite to `/api` unless you follow Vercel’s older serverless-function layout.
+Vercel’s **Express** integration scans for `app.{js}`, `index.{js}`, etc., and expects a **default export** of the Express `app` from that file (see [Express on Vercel](https://vercel.com/docs/frameworks/backend/express)). A factory file named **`app.js`** is picked **before** `index.js` and will crash (no default export). This repo keeps the factory in **`httpApp.js`** and uses **`index.js`** as the only `export default app` entry. `index.js` uses `app.listen` only when `VERCEL` is unset (local / Render / Railway).
 
 1. **Root Directory** → **`server`**.
 2. **Framework preset** → **Express** (or “Other” with Node; Express is fine).

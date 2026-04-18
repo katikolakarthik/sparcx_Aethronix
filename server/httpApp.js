@@ -1,3 +1,7 @@
+/**
+ * Not named `app.js` — Vercel’s Express preset treats `app.{js}` as the app entry
+ * and expects `export default` of an Express instance there, which would crash.
+ */
 import express from 'express';
 import cors from 'cors';
 import { connectDb } from './db.js';
