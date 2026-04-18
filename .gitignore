@@ -4,3 +4,6 @@ dist/
 *.log
 .DS_Store
 uploads/
+
+# GitHub rejects any single file > 100 MB. Screen recordings belong on YouTube / Drive / Git LFS — not plain git.
+screenshots/*.mp4

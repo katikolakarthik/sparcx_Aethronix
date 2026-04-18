@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="screenshots/image1.png" alt="Smart Farm Simulator — app preview" width="92%" style="max-width: 920px; border-radius: 14px;" />
-</p>
-
 <h1 align="center">Smart Farm Simulator</h1>
 
 <p align="center"><strong>Full-stack agritech demo</strong> — simulate crops before you sow, export PDFs, run an AI-style disease workflow with maps & mock store routing, plus market outlooks, government scheme matching, irrigation planning, pest risk alerts, a dashboard assistant snapshot, and an in-app farming chat.</p>
@@ -19,6 +15,8 @@
 </p>
 
 <p align="center">
+  <a href="#demo-screen-recording">Demo video</a>
+  &nbsp;·&nbsp;
   <a href="#demo-gallery">Gallery</a>
   &nbsp;·&nbsp;
   <a href="#highlights">Highlights</a>
@@ -34,10 +32,39 @@
 
 ---
 
+## Demo screen recording
+
+<p align="center" id="demo-screen-recording">
+  <a href="https://www.youtube.com/watch?v=REPLACE_WITH_YOUR_VIDEO_ID" title="Open demo walkthrough on YouTube">
+    <img src="screenshots/image1.png" alt="Click to watch the Smart Farm demo on YouTube" width="92%" style="max-width: 920px; border-radius: 14px;" />
+  </a>
+</p>
+
+<p align="center">
+  <sub><strong>Why not an MP4 in this repo?</strong> GitHub rejects any file <strong>&gt; 100 MB</strong>. Upload your recording to YouTube (unlisted is fine) and replace <code>REPLACE_WITH_YOUR_VIDEO_ID</code> in this README, <em>or</em> compress to &lt; 95 MB and remove <code>screenshots/*.mp4</code> from <code>.gitignore</code> before committing the small MP4.</sub>
+</p>
+
+<details>
+<summary><strong>Optional: shrink MP4 under 100 MB (ffmpeg)</strong></summary>
+
+```bash
+ffmpeg -y -i "screenshots/demo-screen-recording.mp4" -vcodec libx264 -crf 30 -preset medium -vf "scale=min(1280\,iw):-2" -acodec aac -b:a 128k -movflags +faststart "screenshots/demo-readme.mp4"
+```
+
+Then remove the <code>screenshots/*.mp4</code> line from <code>.gitignore</code>, commit only <code>demo-readme.mp4</code>, and switch the README block back to a <code>&lt;video src="screenshots/demo-readme.mp4"&gt;</code> embed if you prefer self‑hosting on GitHub.
+
+</details>
+
+<p align="center">
+  <img src="screenshots/image1.png" alt="Smart Farm Simulator — app preview" width="92%" style="max-width: 920px; border-radius: 14px;" />
+</p>
+
+---
+
 ## Demo gallery
 
 <p align="center">
-  <sub>Commit all files under <code>screenshots/</code> so images load on GitHub.</sub>
+  <sub>Static screenshots below · commit all files under <code>screenshots/</code> so images load on GitHub.</sub>
 </p>
 
 <table>
