@@ -229,7 +229,7 @@ Live UI example: [sparcx-aethronix.vercel.app](https://sparcx-aethronix.vercel.a
 If Vercel **serves source as plain text** or **`/api/health` is wrong**, the deploy was treated like a **static upload** (often because a root **`index.js`** is published as a static asset, or rewrites never hit a function). This repo uses:
 
 - **`server/vercel.json`** — rewrite **every path** → **`/api/main`**
-- **`server/api/main.js`** — one serverless function + **`serverless-http`** around the same Express app
+- **`server/api/main.js`** — Vercel Node entry; calls **`app(req, res)`** (no `serverless-http`, which can hang on Vercel)
 - **`server/listen.mjs`** — **only** for `npm start` / local / Render (no root `index.js` on purpose)
 
 **Vercel project settings**
