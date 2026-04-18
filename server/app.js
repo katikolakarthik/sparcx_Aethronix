@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import { connectDb } from './db.js';
 import { getUploadsRoot } from './paths.js';
 import authRoutes from './routes/auth.js';
 import simulationRoutes from './routes/simulations.js';
@@ -16,7 +17,7 @@ function corsOriginOption() {
   const raw = process.env.CLIENT_ORIGIN || 'http://localhost:5173';
   const list = raw
     .split(',')
-    .map((s) => s.trim())
+    .map((s) => s.trim().replace(/\/$/, ''))
     .filter(Boolean);
   if (list.length === 0) return 'http://localhost:5173';
   return list.length === 1 ? list[0] : list;
@@ -33,15 +34,25 @@ export function createApp() {
   );
   app.use(express.json());
 
-  app.use('/uploads', express.static(getUploadsRoot()));
-
   app.get('/', (_req, res) => {
     res.redirect(302, '/api/health');
   });
 
+  /** Liveness only — skips Mongo so deploy / routing can be verified quickly. */
   app.get('/api/health', (_req, res) => {
     res.json({ ok: true, service: 'smart-farm-simulator-api' });
   });
+
+  app.use(async (_req, _res, next) => {
+    try {
+      await connectDb();
+      next();
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  app.use('/uploads', express.static(getUploadsRoot()));
 
   app.use('/api/auth', authRoutes);
   app.use('/api/simulations', simulationRoutes);

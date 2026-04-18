@@ -224,16 +224,17 @@ Live UI example: [sparcx-aethronix.vercel.app](https://sparcx-aethronix.vercel.a
 
 **Ephemeral disk:** disease images are stored under `uploads/` on the server filesystem. On typical PaaS free tiers the disk is wiped on redeploy or sleep; for durable images use object storage (S3, R2, etc.) and return full URLs from upload logic later.
 
-### 1b. Backend on Vercel (same stack as `sparcx-aethronix-m7ho.vercel.app`)
+### 1b. Backend on Vercel (Express preset)
 
-A normal `node index.js` server does **not** run on Vercel; the repo now includes a **serverless** entry (`server/api/index.js` + `serverless-http`) and `server/vercel.json` rewrites so all paths hit that function.
+Vercel’s **Express** integration looks for `server/index.js` and expects a **default export** of the Express `app` (see [Express on Vercel](https://vercel.com/docs/frameworks/backend/express)). This repo’s `index.js` does that when `VERCEL` is set, and uses `app.listen` only for local / non-Vercel runs. Do **not** add a competing `vercel.json` rewrite to `/api` unless you follow Vercel’s older serverless-function layout.
 
-1. In the **API** Vercel project → **Settings → General → Root Directory**, set **`server`** (required so `api/` and `vercel.json` are recognized).
-2. **Environment variables** (Production): `MONGODB_URI`, `JWT_SECRET`, `CLIENT_ORIGIN` (your **frontend** URL, e.g. `https://sparcx-aethronix.vercel.app`).
-3. **Redeploy** after pushing the latest `server/` changes (`npm install` will pull `serverless-http`).
-4. Smoke test: open `https://YOUR-API.vercel.app/api/health` — expect `{"ok":true,...}`.
+1. **Root Directory** → **`server`**.
+2. **Framework preset** → **Express** (or “Other” with Node; Express is fine).
+3. **Environment variables**: `MONGODB_URI`, `JWT_SECRET`, `CLIENT_ORIGIN` (frontend URL, **no trailing slash** recommended, e.g. `https://sparcx-aethronix.vercel.app`).
+4. Push changes and **Redeploy**.
+5. Open `https://YOUR-API.vercel.app/api/health` — should return `{"ok":true,...}` without needing a successful DB call (health is registered before the Mongo middleware).
 
-On Vercel, disease uploads are written under **`/tmp`** only (per invocation); treat them as **short-lived**. Render/Railway are still easier for a classic Express process and local disk.
+Per Vercel, `express.static()` is not used for CDN assets the same way as on a VPS; disease uploads on Vercel still use **`/tmp`**. For durable files, use Render/Railway or object storage.
 
 ### 2. Frontend (Vercel)
 
