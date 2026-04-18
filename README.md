@@ -224,17 +224,25 @@ Live UI example: [sparcx-aethronix.vercel.app](https://sparcx-aethronix.vercel.a
 
 **Ephemeral disk:** disease images are stored under `uploads/` on the server filesystem. On typical PaaS free tiers the disk is wiped on redeploy or sleep; for durable images use object storage (S3, R2, etc.) and return full URLs from upload logic later.
 
-### 1b. Backend on Vercel (Express preset)
+### 1b. Backend on Vercel (`server/` + explicit function)
 
-Vercel’s **Express** integration scans for `app.{js}`, `index.{js}`, etc., and expects a **default export** of the Express `app` from that file (see [Express on Vercel](https://vercel.com/docs/frameworks/backend/express)). A factory file named **`app.js`** is picked **before** `index.js` and will crash (no default export). This repo keeps the factory in **`httpApp.js`** and uses **`index.js`** as the only `export default app` entry. `index.js` uses `app.listen` only when `VERCEL` is unset (local / Render / Railway).
+If Vercel **serves `index.js` as plain text** or **`/api/health` is 404**, the project was treated like a **static file upload**, not a Node API. This repo fixes that with:
 
-1. **Root Directory** → **`server`**.
-2. **Framework preset** → **Express** (or “Other” with Node; Express is fine).
-3. **Environment variables**: `MONGODB_URI`, `JWT_SECRET`, `CLIENT_ORIGIN` (frontend URL, **no trailing slash** recommended, e.g. `https://sparcx-aethronix.vercel.app`).
-4. Push changes and **Redeploy**.
-5. Open `https://YOUR-API.vercel.app/api/health` — should return `{"ok":true,...}` without needing a successful DB call (health is registered before the Mongo middleware).
+- **`server/vercel.json`** — `"framework": null` (Other) and a **rewrite** of every path to **`/api`**
+- **`server/api/index.js`** — one serverless function wrapping the same Express app via **`serverless-http`**
+- **`server/index.js`** — **no** `export default` (local `npm start` / Render only)
 
-Per Vercel, `express.static()` is not used for CDN assets the same way as on a VPS; disease uploads on Vercel still use **`/tmp`**. For durable files, use Render/Railway or object storage.
+**Vercel project settings**
+
+1. **Root Directory** → **`server`**
+2. **Framework Preset** → **Other** (matches `vercel.json` `framework: null`; avoids wrong auto-build)
+3. **Build Command** → leave **empty** (unless you add a real build later)
+4. **Output Directory** → **empty / default** — do **not** set this to `.` or `server`; that publishes source as static files and breaks routing
+5. Env: `MONGODB_URI`, `JWT_SECRET`, `CLIENT_ORIGIN` (frontend origin, no trailing slash)
+
+Then **Redeploy** and open `https://YOUR-API.vercel.app/api/health` — expect `{"ok":true,"service":"smart-farm-simulator-api"}`.
+
+The factory lives in **`httpApp.js`** (never rename it to **`app.js`**, or Vercel’s Express detector may grab the wrong file again). On Vercel, `express.static` for uploads is limited; disease files use **`/tmp`**. For production file storage, prefer Render/Railway or object storage.
 
 ### 2. Frontend (Vercel)
 
