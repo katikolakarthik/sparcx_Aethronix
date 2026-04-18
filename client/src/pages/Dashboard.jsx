@@ -11,7 +11,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import { Sprout, Coins, AlertTriangle, Layers } from 'lucide-react';
+import { Sprout, Coins, AlertTriangle, Layers, LineChart as LineChartIcon, Droplets, Bug, Landmark, Activity } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../api/client.js';
 import StatCard from '../components/StatCard.jsx';
@@ -25,20 +25,34 @@ function riskLabel(avg) {
   return 'High';
 }
 
+const EMPTY_SNAPSHOT = {
+  bestCropToday: '—',
+  predictedProfit: 0,
+  diseaseAlerts: 'No scans yet',
+  marketOpportunity: 'Run market predictor',
+  waterNeedToday: '—',
+  schemeEligibilityCount: 0,
+  charts: { priceTrend: [], waterUsage: [], pestRisk: [] },
+};
+
 export default function Dashboard() {
   const [sims, setSims] = useState(null);
+  const [snapshot, setSnapshot] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      try {
-        const { data } = await api.get('/simulations/all');
-        if (!cancelled) setSims(data);
-      } catch {
-        if (!cancelled) {
-          setSims([]);
-          toast.error('Could not load dashboard data');
-        }
+      const [simRes, snapRes] = await Promise.allSettled([api.get('/simulations/all'), api.get('/assistant/snapshot')]);
+      if (cancelled) return;
+      if (simRes.status === 'fulfilled') setSims(simRes.value.data);
+      else {
+        setSims([]);
+        toast.error('Could not load simulations');
+      }
+      if (snapRes.status === 'fulfilled') setSnapshot(snapRes.value.data);
+      else {
+        setSnapshot(EMPTY_SNAPSHOT);
+        toast.error('Assistant snapshot unavailable');
       }
     })();
     return () => {
@@ -87,47 +101,140 @@ export default function Dashboard() {
     return { total, bestCrop, profitSum, risk: riskLabel(avgRisk), profitByCrop, yieldByCrop, climateSeries, avgRisk };
   }, [sims]);
 
+  const snap = snapshot || EMPTY_SNAPSHOT;
+
   if (sims === null) {
     return <Loader label="Loading dashboard…" />;
   }
 
+  const priceTrend = snap.charts?.priceTrend?.length ? snap.charts.priceTrend : [];
+  const waterUsage = snap.charts?.waterUsage?.length ? snap.charts.waterUsage : [];
+  const pestRisk = snap.charts?.pestRisk?.length ? snap.charts.pestRisk : [];
+
   return (
-    <div className="space-y-8">
+    <div className="mx-auto max-w-6xl space-y-8">
       <div>
         <h1 className="font-display text-2xl font-bold text-slate-900 dark:text-white md:text-3xl">Dashboard</h1>
-        <p className="text-slate-600 dark:text-slate-400">Executive snapshot of your simulations.</p>
+        <p className="text-slate-600 dark:text-slate-400">Executive snapshot — simulations plus AI farming assistant signals.</p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard title="Total simulations" value={String(stats.total)} subtitle="All-time runs" icon={Layers} delay={0} />
+      <div className="grid auto-rows-fr grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
         <StatCard
-          title="Best crop"
-          value={stats.bestCrop}
-          subtitle="By cumulative profit"
+          title="Best crop today"
+          value={snap.bestCropToday || stats.bestCrop}
+          subtitle="From simulations & trends"
           icon={Sprout}
-          accent="from-emerald-500 to-teal-600"
-          delay={0.05}
+          delay={0}
         />
         <StatCard
           title="Predicted profit"
-          value={`${stats.profitSum.toLocaleString()}`}
-          subtitle="Sum of net profit"
+          value={stats.profitSum.toLocaleString()}
+          subtitle="Sum of net profit (simulations)"
           icon={Coins}
           accent="from-amber-500 to-orange-500"
-          delay={0.1}
+          delay={0.04}
         />
         <StatCard
-          title="Risk level"
+          title="Disease alerts"
+          value={snap.diseaseAlerts === 'No scans yet' ? 'None' : snap.diseaseAlerts?.match(/\(([^)]+)\)/)?.[1] || 'New'}
+          subtitle={snap.diseaseAlerts || 'Upload a leaf scan'}
+          icon={Bug}
+          accent="from-violet-500 to-purple-600"
+          delay={0.08}
+        />
+        <StatCard
+          title="Market opportunity"
+          value={snap.marketOpportunity?.split('·')[0]?.trim() || '—'}
+          subtitle={snap.marketOpportunity || 'Open market intelligence'}
+          icon={LineChartIcon}
+          accent="from-sky-500 to-teal-600"
+          delay={0.12}
+        />
+        <StatCard
+          title="Water need today"
+          value={snap.waterNeedToday || '—'}
+          subtitle="From last irrigation plan"
+          icon={Droplets}
+          accent="from-cyan-500 to-blue-600"
+          delay={0.16}
+        />
+        <StatCard
+          title="Scheme matches"
+          value={String(snap.schemeEligibilityCount ?? 0)}
+          subtitle="Last subsidy search"
+          icon={Landmark}
+          accent="from-emerald-600 to-farm-700"
+          delay={0.2}
+        />
+        <StatCard title="Total simulations" value={String(stats.total)} subtitle="All-time runs" icon={Layers} delay={0.22} />
+        <StatCard
+          title="Climate risk"
           value={stats.risk}
           subtitle={stats.avgRisk != null ? `Avg score ${Math.round(stats.avgRisk)}` : 'No runs yet'}
           icon={AlertTriangle}
           accent="from-rose-500 to-orange-500"
-          delay={0.15}
+          delay={0.24}
         />
       </div>
 
+      <div>
+        <h2 className="mb-4 font-display text-lg font-semibold text-slate-900 dark:text-white">Assistant analytics</h2>
+        <div className="grid gap-6 lg:grid-cols-3">
+          <ChartCard title="Price trend" subtitle="Latest market prediction curve">
+            {priceTrend.length === 0 ? (
+              <div className="flex h-full items-center justify-center text-sm text-slate-500">Run Market Intelligence forecast.</div>
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={priceTrend}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" className="dark:stroke-slate-700" />
+                  <XAxis dataKey="name" tick={{ fontSize: 10 }} />
+                  <YAxis tick={{ fontSize: 10 }} />
+                  <Tooltip />
+                  <Legend />
+                  <Line type="monotone" dataKey="price" name="Price" stroke="#16a34a" strokeWidth={2} dot={false} />
+                </LineChart>
+              </ResponsiveContainer>
+            )}
+          </ChartCard>
+
+          <ChartCard title="Water usage" subtitle="Weekly plan from irrigation assistant">
+            {waterUsage.length === 0 ? (
+              <div className="flex h-full items-center justify-center text-sm text-slate-500">Generate an irrigation plan.</div>
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={waterUsage}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" className="dark:stroke-slate-700" />
+                  <XAxis dataKey="name" tick={{ fontSize: 10 }} />
+                  <YAxis tick={{ fontSize: 10 }} />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="liters" name="Liters" fill="#0ea5e9" radius={[8, 8, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
+          </ChartCard>
+
+          <ChartCard title="Pest risk" subtitle="Recent assessments">
+            {pestRisk.length === 0 ? (
+              <div className="flex h-full items-center justify-center text-sm text-slate-500">Run a pest alert check.</div>
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={pestRisk}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" className="dark:stroke-slate-700" />
+                  <XAxis dataKey="name" tick={{ fontSize: 10 }} />
+                  <YAxis tick={{ fontSize: 10 }} domain={[0, 100]} />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="risk" name="Risk score" fill="#f43f5e" radius={[8, 8, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
+          </ChartCard>
+        </div>
+      </div>
+
       <div className="grid gap-6 lg:grid-cols-2">
-        <ChartCard title="Profit comparison" subtitle="Net profit by recommended crop">
+        <ChartCard title="Profit comparison" subtitle="Net profit by recommended crop" action={<Activity className="h-4 w-4 text-slate-400" />}>
           {stats.profitByCrop.length === 0 ? (
             <div className="flex h-full items-center justify-center text-sm text-slate-500">Run a simulation to see profit by crop.</div>
           ) : (

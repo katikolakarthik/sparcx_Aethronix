@@ -4,7 +4,7 @@
 
 <h1 align="center">Smart Farm Simulator</h1>
 
-<p align="center"><strong>Full-stack agritech demo</strong> — simulate crops before you sow, export PDFs, and run an AI-style disease workflow with maps & mock store routing.</p>
+<p align="center"><strong>Full-stack agritech demo</strong> — simulate crops before you sow, export PDFs, run an AI-style disease workflow with maps & mock store routing, plus market outlooks, government scheme matching, irrigation planning, pest risk alerts, a dashboard assistant snapshot, and an in-app farming chat.</p>
 
 <p align="center">
   <a href="https://nodejs.org/"><img alt="Node 18+" src="https://img.shields.io/badge/node-%3E%3D18-339933?style=for-the-badge&logo=node.js&logoColor=white" /></a>
@@ -79,6 +79,12 @@
 |--------|----------------|
 | **Farm simulator** | JWT auth, Mongo-backed simulations, dashboard charts (Recharts), compare crops, history, PDF export for runs |
 | **Disease intelligence** | Image upload (multer), mock CV features + server rules, treatments, **Leaflet** map (always light tiles), mock nearby stores, disease PDF |
+| **Market intelligence** | Mock mandi-style prices by crop & location, short-horizon “predictions”, trend series, buy/hold/sell-style recommendations (persisted per user) |
+| **Government schemes** | Filter by state, land size, crop, farmer category; mock eligibility list with scheme cards (history saved in MongoDB) |
+| **Irrigation planner** | Soil, weather, water source, and crop inputs produce a mock schedule, liters per window, drought-style warnings, and tips (plans persisted) |
+| **Pest alerts** | Season + weather aware mock risk score, likely pests, prevention panel, and treatment notes (alerts persisted) |
+| **Assistant & chat** | `GET /api/assistant/snapshot` aggregates simulations, last disease scan, market, irrigation, pest, and schemes for dashboard cards and chart seeds; floating **AI Farmer Assistant** chat with quick prompts and `POST /api/chat/message` (mock replies, history in DB) |
+| **Presentation** | Public `/presentation` slide-style walkthrough for demos and pitch contexts |
 | **Product UI** | Tailwind + agronomy greens, glass cards, Framer Motion, dark mode, i18n (EN · ES · HI · TE), toasts, responsive sidebar |
 
 <details>
@@ -87,6 +93,18 @@
 **Simulator:** landing · register/login · dashboard stat cards · profit / yield / climate charts · simulation form with loader · result cards + alternatives + fertilizers + pest warnings · crop compare (rice / cotton / maize) · simulation history · settings (language, theme, profile).
 
 **Disease:** drag-drop & camera · detect + reset · severity badge · medicine cards + “how to apply” modal · store cards + navigate · voice summary (Web Speech) · scan history tab · GPS for distances.
+
+**Market:** crop / state / district filters · current mock price · prediction with trend chart data and recommendation badge.
+
+**Schemes:** eligibility-style recommendations from profile-like filters · scheme cards with badges.
+
+**Irrigation:** inputs for crop, land, soil, weather, water source · timeline schedule · water cards · alert banner when mock drought logic fires.
+
+**Pest:** risk meter · pest cards · prevention tips · server-side mock prediction pipeline.
+
+**Chat:** global floating widget when logged in · quick actions · multilingual-aware replies (swap `server/utils/chatLogic.js` for a real LLM later).
+
+**Dashboard extras:** assistant snapshot–driven stat strip and seeded Recharts for price trend, water usage, and pest risk history.
 
 </details>
 
@@ -98,8 +116,8 @@
 |--|--|
 | **Client** | React 18 · Vite 5 · Tailwind · Framer Motion · Recharts · react-leaflet · Leaflet · Lucide · axios · react-hot-toast · jsPDF |
 | **Server** | Express 4 · Mongoose · Multer 2 · bcryptjs · JWT · CORS · dotenv |
-| **Data** | MongoDB collections: `User`, `Simulation`, `DiseaseScan` |
-| **“AI”** | Replaceable heuristics in `server/utils/predict.js` & `diseasePredict.js` |
+| **Data** | MongoDB collections: `User`, `Simulation`, `DiseaseScan`, `MarketPrediction`, `SchemeHistory`, `IrrigationPlan`, `PestAlert`, `ChatHistory` |
+| **“AI”** | Replaceable heuristics in `server/utils/predict.js`, `diseasePredict.js`, `marketLogic.js`, `schemesLogic.js`, `irrigationLogic.js`, `pestLogic.js`, `chatLogic.js` |
 
 ---
 
@@ -115,15 +133,33 @@ flowchart LR
     C[Simulations]
     D[Disease + uploads]
     E[Stores nearby]
+    M[Market]
+    S[Schemes]
+    I[Irrigation]
+    P[Pest]
+    H[Chat]
+    AS[Assistant snapshot]
   end
   F[(MongoDB)]
   A --> B
   A --> C
   A --> D
   A --> E
+  A --> M
+  A --> S
+  A --> I
+  A --> P
+  A --> H
+  A --> AS
   B --> F
   C --> F
   D --> F
+  M --> F
+  S --> F
+  I --> F
+  P --> F
+  H --> F
+  AS --> F
 ```
 
 ---
@@ -221,6 +257,61 @@ cd client && npm run build && npm run preview
 
 </details>
 
+<details>
+<summary><strong>Market —</strong> <code>/api/market</code> (JWT)</summary>
+
+| Method | Path | Notes |
+|--------|------|--------|
+| GET | `/prices` | Query: `crop`, `state`, `district` — mock current price |
+| POST | `/predict` | Body: `crop`, `state`, `district` — saves `MarketPrediction` |
+
+</details>
+
+<details>
+<summary><strong>Schemes —</strong> <code>/api/schemes</code> (JWT)</summary>
+
+| Method | Path | Body |
+|--------|------|------|
+| POST | `/recommend` | `state`, `landSize`, `cropType`, `farmerCategory` — saves `SchemeHistory` |
+
+</details>
+
+<details>
+<summary><strong>Irrigation —</strong> <code>/api/irrigation</code> (JWT)</summary>
+
+| Method | Path | Body |
+|--------|------|------|
+| POST | `/plan` | Crop, land, soil, weather, water source, etc. (see `buildIrrigationPlanMock`) — saves `IrrigationPlan` |
+
+</details>
+
+<details>
+<summary><strong>Pest —</strong> <code>/api/pest</code> (JWT)</summary>
+
+| Method | Path | Body |
+|--------|------|------|
+| POST | `/predict` | `crop`, `location`, `season`, `weather` — saves `PestAlert` |
+
+</details>
+
+<details>
+<summary><strong>Chat —</strong> <code>/api/chat</code> (JWT)</summary>
+
+| Method | Path | Body |
+|--------|------|------|
+| POST | `/message` | `message`, optional `lang` — saves `ChatHistory`, returns `response` and `id` |
+
+</details>
+
+<details>
+<summary><strong>Assistant —</strong> <code>/api/assistant</code> (JWT)</summary>
+
+| Method | Path | Notes |
+|--------|------|--------|
+| GET | `/snapshot` | Aggregates latest simulations, disease, market, irrigation, pest, schemes for dashboard cards and small chart datasets |
+
+</details>
+
 **Health:** `GET /api/health` · **Static uploads:** `GET /uploads/...`
 
 ---
@@ -228,8 +319,8 @@ cd client && npm run build && npm run preview
 ## Repository layout
 
 ```
-├── client/          # Vite + React (src/pages, components, contexts, i18n)
-├── server/          # Express (models, routes, middleware, utils)
+├── client/          # Vite + React (pages: market, schemes, irrigation, pest; chat widget; voice STT helper)
+├── server/          # Express (extra routes: market, schemes, irrigation, pest, chat, assistant + matching models)
 ├── screenshots/     # README images (keep in git for GitHub preview)
 ├── README.md
 └── .gitignore
@@ -243,6 +334,7 @@ cd client && npm run build && npm run preview
 - **Disease uploads** write to `server/uploads/disease/` (ignored by git — create folder on deploy).
 - **Axios:** no global `Content-Type: application/json` so **FormData** uploads work.
 - **Map:** OSM raster tiles; light style even when the app theme is dark.
+- **Market, schemes, irrigation, pest, and chat** endpoints use deterministic mock logic suitable for demos; swap the `server/utils/*Logic.js` modules (or wire external APIs) for production accuracy.
 
 ---
 

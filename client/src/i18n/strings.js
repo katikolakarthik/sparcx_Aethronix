@@ -11,6 +11,10 @@ export const strings = {
       register: 'Register',
       logout: 'Logout',
       diseaseDetection: 'Disease Detection',
+      market: 'Market Intelligence',
+      schemes: 'Schemes & Subsidy',
+      irrigation: 'Irrigation Planner',
+      pestAlerts: 'Pest Alerts',
     },
     disease: {
       kicker: 'Precision agronomy',
@@ -41,6 +45,10 @@ export const strings = {
       register: 'Registrarse',
       logout: 'Salir',
       diseaseDetection: 'Detección de enfermedades',
+      market: 'Inteligencia de mercado',
+      schemes: 'Programas y subsidios',
+      irrigation: 'Plan de riego',
+      pestAlerts: 'Alertas de plagas',
     },
     disease: {
       kicker: 'Agronomía de precisión',
@@ -71,6 +79,10 @@ export const strings = {
       register: 'रजिस्टर',
       logout: 'लॉग आउट',
       diseaseDetection: 'रोग पहचान',
+      market: 'बाजार विश्लेषण',
+      schemes: 'योजना व सब्सिडी',
+      irrigation: 'सिंचाई योजना',
+      pestAlerts: 'कीट अलर्ट',
     },
     disease: {
       kicker: 'सटीक कृषि विज्ञान',
@@ -101,6 +113,10 @@ export const strings = {
       register: 'నమోదు',
       logout: 'లాగౌట్',
       diseaseDetection: 'వ్యాధి గుర్తింపు',
+      market: 'మార్కెట్ విశ్లేషణ',
+      schemes: 'పథకాలు & సబ్సిడీ',
+      irrigation: 'త్రాగునీరు ప్రణాళిక',
+      pestAlerts: 'కీటక హెచ్చరికలు',
     },
     disease: {
       kicker: 'ఖచ్చితమైన వ్యవసాయ శాస్త్రం',

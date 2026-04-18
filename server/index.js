@@ -7,6 +7,12 @@ import authRoutes from './routes/auth.js';
 import simulationRoutes from './routes/simulations.js';
 import diseaseRoutes from './routes/disease.js';
 import storeRoutes from './routes/stores.js';
+import marketRoutes from './routes/market.js';
+import schemesRoutes from './routes/schemes.js';
+import irrigationRoutes from './routes/irrigation.js';
+import chatRoutes from './routes/chat.js';
+import pestRoutes from './routes/pest.js';
+import assistantRoutes from './routes/assistant.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -30,6 +36,12 @@ app.use('/api/auth', authRoutes);
 app.use('/api/simulations', simulationRoutes);
 app.use('/api/disease', diseaseRoutes);
 app.use('/api/stores', storeRoutes);
+app.use('/api/market', marketRoutes);
+app.use('/api/schemes', schemesRoutes);
+app.use('/api/irrigation', irrigationRoutes);
+app.use('/api/chat', chatRoutes);
+app.use('/api/pest', pestRoutes);
+app.use('/api/assistant', assistantRoutes);
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, _req, res, _next) => {

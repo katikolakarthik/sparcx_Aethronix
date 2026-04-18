@@ -10,7 +10,7 @@ export default function AppLayout() {
   return (
     <div className="min-h-screen bg-farm-50/50 dark:bg-slate-950">
       <Navbar onMenu={() => setMobileOpen(true)} />
-      <div className="mx-auto flex max-w-7xl">
+      <div className="mx-auto flex w-full max-w-[1440px]">
         <Sidebar onNavigate={() => setMobileOpen(false)} />
         <AnimatePresence>
           {mobileOpen && (
@@ -22,11 +22,11 @@ export default function AppLayout() {
               onClick={() => setMobileOpen(false)}
             >
               <motion.aside
-                initial={{ x: -280 }}
+                initial={{ x: -240 }}
                 animate={{ x: 0 }}
-                exit={{ x: -280 }}
+                exit={{ x: -240 }}
                 transition={{ type: 'spring', stiffness: 320, damping: 32 }}
-                className="absolute left-0 top-0 h-full w-[260px] border-r border-slate-200 bg-white shadow-xl dark:border-slate-800 dark:bg-slate-950"
+                className="absolute left-0 top-0 h-full w-[min(88vw,240px)] border-r border-slate-200 bg-white shadow-xl dark:border-slate-800 dark:bg-slate-950"
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3 dark:border-slate-800">
@@ -42,7 +42,7 @@ export default function AppLayout() {
             </motion.div>
           )}
         </AnimatePresence>
-        <main className="min-h-[calc(100vh-4rem)] flex-1 px-4 py-6 md:px-8">
+        <main className="min-h-[calc(100vh-4rem)] min-w-0 flex-1 px-4 py-6 md:px-6 lg:px-8">
           <Outlet />
         </main>
       </div>

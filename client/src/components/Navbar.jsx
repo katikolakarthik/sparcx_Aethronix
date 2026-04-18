@@ -1,19 +1,104 @@
+import { useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Leaf, Mic, Moon, Sun, LogOut, User } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useTheme } from '../context/ThemeContext.jsx';
 import { useLanguage } from '../context/LanguageContext.jsx';
+import { getSpeechRecognitionConstructor, startVoiceListening, stopVoiceListening } from '../utils/voiceAssistant.js';
 
 export default function Navbar({ onMenu }) {
   const { isAuthenticated, user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const navigate = useNavigate();
+  const recognitionRef = useRef(null);
+  const loadingToastIdRef = useRef(null);
+  const voiceCancelledRef = useRef(false);
+
+  const handleVoice = () => {
+    if (recognitionRef.current) {
+      voiceCancelledRef.current = true;
+      stopVoiceListening(recognitionRef.current);
+      recognitionRef.current = null;
+      if (loadingToastIdRef.current) {
+        toast.dismiss(loadingToastIdRef.current);
+        loadingToastIdRef.current = null;
+      }
+      toast('Listening stopped.', { icon: '🎙️', duration: 2000 });
+      return;
+    }
+
+    if (!getSpeechRecognitionConstructor()) {
+      toast(
+        () => (
+          <div className="max-w-xs text-sm">
+            <p className="font-semibold text-slate-900 dark:text-white">Voice isn’t available here</p>
+            <p className="mt-1 text-slate-600 dark:text-slate-300">
+              Use <strong>Chrome</strong> or <strong>Edge</strong> for built-in speech-to-text, or connect Azure / Google Cloud Speech in production.
+            </p>
+          </div>
+        ),
+        { icon: '🎙️', duration: 6500 },
+      );
+      return;
+    }
+
+    voiceCancelledRef.current = false;
+    const loadId = toast.loading('Listening… speak now (tap Voice again to stop)');
+    loadingToastIdRef.current = loadId;
+
+    const rec = startVoiceListening({
+      lang,
+      onFinal: (text) => {
+        if (voiceCancelledRef.current) return;
+        toast.dismiss(loadId);
+        loadingToastIdRef.current = null;
+        recognitionRef.current = null;
+        if (text) {
+          toast.success(`You said: “${text}”`, { icon: '🎙️', duration: 6000 });
+        } else {
+          toast('No words captured — try again.', { icon: '🎙️' });
+        }
+      },
+      onError: (code) => {
+        if (voiceCancelledRef.current) return;
+        toast.dismiss(loadId);
+        loadingToastIdRef.current = null;
+        recognitionRef.current = null;
+        if (code === 'aborted') return;
+        const hints = {
+          'not-allowed': 'Microphone blocked — allow access in the browser address bar.',
+          'no-speech': 'No speech heard — try again closer to the mic.',
+          'audio-capture': 'No microphone found or it is in use elsewhere.',
+          network: 'Network error — check your connection.',
+          unsupported: 'Speech recognition not supported in this browser.',
+        };
+        toast.error(hints[code] || `Voice error: ${code}`);
+      },
+      onEnd: () => {
+        if (voiceCancelledRef.current) {
+          voiceCancelledRef.current = false;
+          return;
+        }
+        if (loadingToastIdRef.current) {
+          toast.dismiss(loadingToastIdRef.current);
+          loadingToastIdRef.current = null;
+        }
+        recognitionRef.current = null;
+      },
+    });
+
+    if (rec) recognitionRef.current = rec;
+    else {
+      toast.dismiss(loadId);
+      loadingToastIdRef.current = null;
+    }
+  };
 
   return (
     <header className="sticky top-0 z-40 border-b border-farm-100/80 bg-white/80 backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/80">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4">
+      <div className="mx-auto flex h-16 w-full max-w-[1440px] items-center justify-between gap-3 px-4 md:px-6">
         <div className="flex items-center gap-2">
           {onMenu && (
             <button
@@ -38,11 +123,9 @@ export default function Navbar({ onMenu }) {
         <div className="flex items-center gap-2">
           <button
             type="button"
-            onClick={() => {
-              toast('Voice assistant: connect your speech provider here.', { icon: '🎙️' });
-            }}
+            onClick={handleVoice}
             className="inline-flex h-10 items-center gap-2 rounded-xl border border-farm-200 bg-farm-50 px-3 text-sm font-medium text-farm-800 transition hover:bg-farm-100 dark:border-slate-700 dark:bg-slate-900 dark:text-farm-200 dark:hover:bg-slate-800"
-            aria-label="Voice assistant placeholder"
+            aria-label="Voice: speak to capture text (browser speech recognition)"
           >
             <Mic className="h-4 w-4" />
             <span className="hidden sm:inline">Voice</span>
